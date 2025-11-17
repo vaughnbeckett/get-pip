@@ -85,11 +85,14 @@ def get_package_versions(name, index_url=None):
     return list(reversed(s.strip().split(sep)))
 
 
-def is_compatible(package_name, package_version, python_version):
-    return getstatusoutput(
+def is_compatible(package_name, package_version, python_version, verbose=False):
+    rc, output =  getstatusoutput(
         f"{sys.executable} -m pip install {package_name}=={package_version} "
         f"--dry-run --python-version {python_version} --no-deps"
-    )[0] == 0
+    )
+    if verbose:
+        print(output)
+    return rc == 0
 
 
 def main():
@@ -104,7 +107,7 @@ def main():
             python_version = f"{major}.{minor}"
             is_hit = False
             for package_version in package_versions:
-                if is_compatible(target_package, package_version, python_version):
+                if is_compatible(target_package, package_version, python_version, True):
                     is_hit = True
                     target_versions[python_version] = package_version
             if not is_hit:
