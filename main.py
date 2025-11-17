@@ -104,7 +104,6 @@ def main():
             python_version = f"{major}.{minor}"
             is_hit = False
             for package_version in package_versions:
-                download_and_extract_package(target_package, package_version, official_index_url)
                 if is_compatible(target_package, package_version, python_version):
                     is_hit = True
                     target_versions[python_version] = package_version
